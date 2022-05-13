@@ -1,0 +1,435 @@
+﻿@using xtbdEcommerceAdminPanel.Models.View_Model
+
+@{
+    ViewBag.Title = "Product Dashboard";
+    CountDashboardVM count = ViewBag.Count;
+}
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <h3>Product Dashboard</h3>
+    </div>
+    <section class="section">
+        <div class="row mb-2">
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Products</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalProduct </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3'>
+                                <div class="card-right text-white">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+                            <div class='px-3 py-3'>
+                                <div class="card-right">
+                                    <span>Total Active Products - @count.ActiveProduct</span><br /><br />
+                                    <span>Total Inactive Products - @count.InactiveProduct</span>
+                                    <input type="hidden" id="totalActiveProduct" value="@count.ActiveProduct" />
+                                    <input type="hidden" id="totalInactiveProduct" value="@count.InactiveProduct" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Brand</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalBrand </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3'>
+                                <div class="card-right text-white">
+                                    <canvas id="myChartBrand"></canvas>
+                                </div>
+                            </div>
+                            <div class='px-3 py-3'>
+                                <div class="card-right">
+                                    <span>Total Active Brands - @count.ActiveBrand</span><br /><br />
+                                    <span>Total Inactive Brands - @count.InactiveBrand</span>
+                                    <input type="hidden" id="totalActiveBrand" value="@count.ActiveBrand" />
+                                    <input type="hidden" id="totalInactiveBrand" value="@count.InactiveBrand" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Categories</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalCategory </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3'>
+                                <div class="card-right text-white">
+                                    <canvas id="myChartCategory"></canvas>
+                                </div>
+                            </div>
+                            <div class='px-3 py-3'>
+                                <div class="card-right">
+                                    <span>Total Active Category - @count.ActiveCategory</span><br /><br />
+                                    <span>Total Inactive Category - @count.InactiveCategory</span>
+                                    <input type="hidden" id="totalActiveCategory" value="@count.ActiveCategory" />
+                                    <input type="hidden" id="totalInactiveCategory" value="@count.InactiveCategory" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                @*<div class="col-12 col-md-4">
+                    <div class="card card-statistic">
+                        <div class="card-body p-0">
+                            <div class="d-flex flex-column">
+                                <div class='px-3 py-3 d-flex justify-content-between'>
+                                    <h3 class='card-title'>Total Department</h3>
+                                    <div class="card-right d-flex align-items-center">
+                                        <p>@count.TotalDepartment </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>*@
+                @*<div class="col-12 col-md-4">
+                    <div class="card card-statistic">
+                        <div class="card-body p-0">
+                            <div class="d-flex flex-column">
+                                <div class='px-3 py-3 d-flex justify-content-between'>
+                                    <h3 class='card-title'>Total Designation</h3>
+                                    <div class="card-right d-flex align-items-center">
+                                        <p>@count.TotalDesignation </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>*@
+                <div class="col-12 col-md-4">
+                    <div class="card card-statistic">
+                        <div class="card-body p-0">
+                            <div class="d-flex flex-column">
+                                <div class='px-3 py-3 d-flex justify-content-between'>
+                                    <h3 class='card-title'>Total Distributor</h3>
+                                    <div class="card-right d-flex align-items-center">
+                                        <p>@count.TotalDistributor </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Concern Tag</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalConcernTag </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Solution Tag</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalSolutionTag </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Banner</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalBanner </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Product Units</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalProductUnit </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3'>
+                                <div class="card-right text-white">
+                                    <canvas id="myChartUnit"></canvas>
+                                </div>
+                            </div>
+                            <div class='px-3 py-3'>
+                                <div class="card-right">
+                                    <span>Total Active Product unit - @count.ActiveProductUnit</span><br /><br />
+                                    <span>Total Inactive Product unit - @count.InactiveProductUnit</span>
+                                    <input type="hidden" id="totalActiveProductUnit" value="@count.ActiveProductUnit" />
+                                    <input type="hidden" id="totalInactiveProductUnit" value="@count.InactiveProductUnit" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Masterdepot</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalMasterDeport </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3'>
+                                <div class="card-right text-white">
+                                    <canvas id="myChartMaster"></canvas>
+                                </div>
+                            </div>
+                            <div class='px-3 py-3'>
+                                <div class="card-right">
+                                    <span>Total Active Masterdepot - @count.ActiveMasterDeport</span><br /><br />
+                                    <span>Total Inactive Masterdepot - @count.InactiveMasterDeport</span>
+                                    <input type="hidden" id="totalActiveMasterdepot" value="@count.ActiveMasterDeport" />
+                                    <input type="hidden" id="totalInactiveMasterdepot" value="@count.InactiveMasterDeport" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>*@
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Deliveryman</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.TotalDeliveryman </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="card">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3'>
+                                <div class="card-right text-white">
+                                    <canvas id="myChartDelivery"></canvas>
+                                </div>
+                            </div>
+                           <div class='px-3 py-3'>
+                    <div class="card-right">
+                        <span>Total Active Deliveryman - @count.ActiveDeliveryman</span><br /><br />
+                        <span>Total Inactive Deliveryman - @count.InactiveDeliveryman</span>
+                        <input type="hidden" id="totalActiveDeliveryman" value="@count.ActiveDeliveryman" />
+                        <input type="hidden" id="totalInactiveDeliveryman" value="@count.InactiveDeliveryman" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>*@
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var activeProduct = $("#totalActiveProduct").val();
+            var inactiveProduct = $("#totalInactiveProduct").val();
+            var ctx = document.getElementById("myChart").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["Active", "Inactive"],
+                    datasets: [{
+                        backgroundColor: [
+                          "#2ecc71",
+                          "#3498db"
+                        ],
+                        data: [activeProduct, inactiveProduct]
+                    }]
+                }
+            });
+
+
+            var activeBrand = $("#totalActiveBrand").val();
+            var inactiveBrand = $("#totalInactiveBrand").val();
+            var ctxBrand = document.getElementById("myChartBrand").getContext('2d');
+            var myChartBrand = new Chart(ctxBrand, {
+                type: 'pie',
+                data: {
+                    labels: ["Active", "Inactive"],
+                    datasets: [{
+                        backgroundColor: [
+                            "#2ecc71",
+                            "#3498db"
+                        ],
+                        data: [activeBrand, inactiveBrand]
+                    }]
+                }
+            });
+
+            var activeCategory = $("#totalActiveCategory").val();
+            var inactiveCategory = $("#totalInactiveCategory").val();
+            var ctxCategory = document.getElementById("myChartCategory").getContext('2d');
+            var myChartCategory = new Chart(ctxCategory, {
+                type: 'pie',
+                data: {
+                    labels: ["Active", "Inactive"],
+                    datasets: [{
+                        backgroundColor: [
+                            "#2ecc71",
+                            "#3498db"
+                        ],
+                        data: [activeCategory, inactiveCategory]
+                    }]
+                }
+            });
+
+
+            var activeUnit = $("#totalActiveProductUnit").val();
+            var inactiveUnit = $("#totalInactiveProductUnit").val();
+            var ctxUnit = document.getElementById("myChartUnit").getContext('2d');
+            var myChartUnit = new Chart(ctxUnit, {
+                type: 'pie',
+                data: {
+                    labels: ["Active", "Inactive"],
+                    datasets: [{
+                        backgroundColor: [
+                            "#2ecc71",
+                            "#3498db"
+                        ],
+                        data: [activeUnit, inactiveUnit]
+                    }]
+                }
+            });
+
+
+            var activeMaster = $("#totalActiveMasterdepot").val();
+            var inactiveMaster = $("#totalInactiveMasterdepot").val();
+            var ctMaster = document.getElementById("myChartMaster").getContext('2d');
+            var myChartMaster = new Chart(ctMaster, {
+                type: 'pie',
+                data: {
+                    labels: ["Active", "Inactive"],
+                    datasets: [{
+                        backgroundColor: [
+                            "#2ecc71",
+                            "#3498db"
+                        ],
+                        data: [activeMaster, inactiveMaster]
+                    }]
+                }
+            });
+
+
+            var activeDeliveryman = $("#totalActiveDeliveryman").val();
+            var inactiveDeliveryman = $("#totalInactiveDeliveryman").val();
+            var ctxDeliveryman = document.getElementById("myChartDelivery").getContext('2d');
+            var myChartDeliveryman = new Chart(ctxDeliveryman, {
+                type: 'pie',
+                data: {
+                    labels: ["Active", "Inactive"],
+                    datasets: [{
+                        backgroundColor: [
+                            "#2ecc71",
+                            "#3498db"
+                        ],
+                        data: [activeDeliveryman, inactiveDeliveryman]
+                    }]
+                }
+            });
+
+
+
+        });</script>
+}

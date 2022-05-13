@@ -1,0 +1,255 @@
+﻿@using System.Globalization
+@using xtbdEcommerceAdminPanel.Models.View_Model
+
+@{
+    ViewBag.Title = "Order Report";
+    List<OrderVsMonthOrYearVm> reportData = ViewBag.ReportData;
+}
+<head>
+    <style>
+        label.error {
+            color: red;
+        }
+    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="~/Content/css/BarChart.css" rel="stylesheet" />
+</head>
+
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h4>Order Rate Over Time</h4>
+            </div>
+        </div>
+    </div>
+
+
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-12 col-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("ShowOrderRateOverTime", "Report", FormMethod.Get, new { id = "OrderRateOverTimeForm" }))
+                            {
+                                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                                <div class="row" id="ReportTypeGrid">
+                                    <section class="col col-md-12" style="padding-bottom: 5px; margin-bottom: 5px">
+                                        <p style="font-weight: bold">Report Type</p>
+                                    </section>
+                                    <section class="col col-md-6" style="padding-bottom: 5px; margin-bottom: 5px">
+
+                                        <label style="width: 100%">
+                                            <input type="hidden" id="RerportType" />
+                                            <select id="ReportType" name="ReportType" class="form-control">
+                                                <option value="0" disabled selected hidden>Select report type</option>
+                                                <option value="1">Yearly</option>
+                                                <option value="2">Monthly</option>
+                                            </select>
+                                        </label>
+
+                                    </section>
+                                    <section class="col col-md-6" style="padding-bottom: 5px; margin-bottom: 5px">
+                                        <a class="btn btn-primary" id="reportTypebtn" onclick="enableFilterDiv()" style="padding: 5px 20px">Select</a>
+                                    </section>
+                                </div>
+
+                                <div class="row" style="margin-top: 20px">
+                                    <div id="yearlyReportGrid" class="col col-md-6">
+                                        <section class="col col-md-12" style="padding-bottom: 5px; margin-bottom: 5px">
+                                            <p style="font-weight: bold">Search By Year</p>
+                                        </section>
+                                        <section class="col col-6" style="padding-bottom: 5px; margin-bottom: 5px;float: left">
+                                            <label class="label">From Year</label>
+
+                                            <label style="width: 98%;">
+                                                @{
+
+                                                    @Html.DropDownList("FromYear", Enumerable.Range(1990, DateTime.Now.Year).Select(x => new SelectListItem { Text = x.ToString() }), "Select Year", new { @class = "form-control" })
+                                                }
+                                            </label>
+                                        </section>
+                                        <section class="col col-6" style="padding-bottom: 5px; margin-bottom: 5px;float: left">
+                                            <label class="label">To Year</label>
+
+                                            <label style="width: 98%">
+                                                @{
+                                                    var currentYear = DateTime.Now.Year;
+                                                    @Html.DropDownList("ToYear", Enumerable.Range(1990, currentYear).Select(x => new SelectListItem { Text = x.ToString() }), "Select Year", new { @class = "form-control" })
+                                                }
+                                            </label>
+                                        </section>
+                                        <footer style="bottom: 0;float: right">
+                                            <button type="submit" class="btn btn-primary">Show</button>
+                                        </footer>
+                                    </div>
+                                    <div id="monthlyReportGrid" class="col col-md-6">
+                                        <section class="col col-md-12" style="padding-bottom: 5px; margin-bottom: 5px">
+                                            <p style="font-weight: bold">Search By Month</p>
+                                        </section>
+
+                                        <section class="col col-6" style="padding-bottom: 5px; margin-bottom: 5px">
+                                            <label class="label">Select Year</label>
+                                            <label style="width: 100%">
+                                                @{
+                                                    @Html.DropDownList("Year", Enumerable.Range(1990, DateTime.Now.Year).Select(x => new SelectListItem { Text = x.ToString() }), "Select Year", new { @class = "form-control" })
+                                                }
+                                            </label>
+                                        </section>
+                                        <section class="col col-6" style="padding-bottom: 5px; margin-bottom: 5px;float: left">
+                                            <label class="label">From Month</label>
+                                            <label style="width: 98%">
+                                                @Html.DropDownList("FromMonth", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
+                                            </label>
+                                        </section>
+                                        <section class="col col-6" style="padding-bottom: 5px; margin-bottom: 5px;float: left">
+                                            <label class="label">To Month</label>
+                                            <label style="width: 98%">
+                                                @Html.DropDownList("ToMonth", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
+                                            </label>
+                                        </section>
+                                        <footer style="bottom: 0;float: right">
+                                            <button type="submit" class="btn btn-primary">Show</button>
+                                            <a class="btn btn-outline-dark mr-1 mb-1" style="margin-left: 5px;" href="@Url.Action("OrderRateOverTime", "Report")">Reset</a>
+                                        </footer>
+                                    </div>
+                                </div>
+
+                                                    }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body" style="height: 450px;">
+                        <header>     
+                            <h2>Order Rate</h2>
+                        </header>
+                        <div style="width: 100%">
+
+                            @if (reportData != null)
+                            {
+                                <div id="chart">
+                                    <ul id="numbers">
+
+                                        <li><span>100</span></li>
+                                        <li><span>90</span></li>
+                                        <li><span>80</span></li>
+                                        <li><span>70</span></li>
+                                        <li><span>60</span></li>
+                                        <li><span>50</span></li>
+                                        <li><span>40</span></li>
+                                        <li><span>30</span></li>
+                                        <li><span>20</span></li>
+                                        <li><span>10</span></li>
+                                        <li><span>0</span></li>
+                                    </ul>
+                                    <ul id="bars">
+
+                                        @foreach (var item in reportData)
+                                        {
+                                            var orderRate = String.Format("{0:0.00}", item.OrderRate);
+                                            if (item.Month == 0)
+                                            {
+                                                <li>
+                                                    <div data-percentage="@orderRate" class="bar"></div><span>@item.Year</span>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                    <div data-percentage="@orderRate" class="bar"></div><span>@CultureInfo.InvariantCulture.DateTimeFormat.GetAbbreviatedMonthName((int) item.Month)</span>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
+  <script>
+        $(document).ready(function () {
+            $('#flashMessage').delay(3000).fadeOut('slow');
+            $('#yearlyReportGrid *').prop('disabled', true);
+            $("#monthlyReportGrid *").prop("disabled", true);
+
+            $(function () {
+                $("#bars li .bar").each(function (key, bar) {
+                    var percentage = $(this).data('percentage');
+
+                    $(this).animate({
+                        'height': percentage + '%'
+                    }, 1000);
+                });
+            });
+        });
+        function enableFilterDiv() {
+            var reportType = $("#ReportType").val();
+            if (reportType === null) {
+                $('#yearlyReportGrid *').prop('disabled', true);
+                $("#monthlyReportGrid *").prop("disabled", true);
+            }
+            else if (reportType === "1") {
+                $('#yearlyReportGrid *').prop('disabled', false);
+                $("#monthlyReportGrid *").prop("disabled", true);
+                $('#FromYear').attr("required", "true");
+                $('#ToYear').attr("required", "true");
+                $('#Year').attr("required", "false");
+                $('#ToMonth').attr("required", "false");
+                $('#FromMonth').attr("required", "false");
+                $("#OrderRateOverTimeForm").validate({
+                    rules: {
+                        FromYear: "required",
+                        ToYear: "required"
+                    },
+                    messages: {
+                        FromYear: "Please select a year",
+                        ToYear: "Please select a year"
+                    }
+                });
+
+            } else {
+                $("#monthlyReportGrid *").prop("disabled", false);
+                $('#yearlyReportGrid *').prop('disabled', true);
+                $('#FromYear').attr("required", "false");
+                $('#ToYear').attr("required", "false");
+                $('#Year').attr("required", "true");
+                $('#ToMonth').attr("required", "true");
+                $('#FromMonth').attr("required", "true");         
+                $("#OrderRateOverTimeForm").validate({
+
+                    rules: {
+                        FromMonth: "required",
+                        ToMonth: "required",
+                        Year: "required"
+
+                    },
+                    messages: {
+                        FromMonth: "Please select a month",
+                        ToMonth: "Please select a month",
+                        Year: "Please select a year"
+                    }
+                });
+            }
+        }
+</script>
+}

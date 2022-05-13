@@ -1,0 +1,113 @@
+﻿@using xtbdEcommerceAdminPanel.Models
+@{
+    ViewBag.Title = "Master Depot Index";
+    var masterDepotList = ViewBag.MasterDeports;
+}
+
+<link rel="stylesheet" href="~/Content/vendors/simple-datatables/style.css">
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Master Depot List</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Masterdepot</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+
+                <a href="@Url.Action("Create","MasterDepot")" class="btn btn-success mr-1 mb-1" style="float: right"><i data-feather="plus"></i>Add Master Depot</a>
+            </div>
+            <div class="card-body">
+                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                <table class='table table-striped' id="table1">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Name</th>
+                            <th>Thana</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Contact Person</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (masterDepotList != null)
+                        {
+                            var count = 1;
+                            foreach (MasterDepot masterDepot in masterDepotList)
+                            {
+                                <tr style="width: 100%">
+                                    <td style="width: 5%">@(count++)</td>
+                                
+                                    <td style="width: 10%">
+                                        @masterDepot.Name
+                                    </td>
+                                    @if (masterDepot.Thana != null)
+                                    {
+                                        <td style="width: 10%">
+                                            @masterDepot.Thana.ThanaName
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width: 10%"></td>
+                                    }
+                                    <td style="width: 10%">
+                                        @masterDepot.Phone
+                                    </td>
+                                    <td style="width: 10%">
+                                        @masterDepot.Email
+                                    </td>
+                                    <td style="width: 10%">
+                                        @masterDepot.ContactPerson
+                                    </td>
+
+                                    <td style="width: 10%">
+                                            @{
+
+                                                var activeStatus = masterDepot.IsActive ? "Active" : "InActive";
+                                                var statusClass = masterDepot.IsActive ? "bg-success" : "bg-danger";
+                                                <span class="badge @statusClass">@activeStatus</span>
+                                            }
+
+                                        </td>
+                                        <td style="width: 10%">
+                                            <a class="btn btn-primary" href="@Url.Action("Edit", "MasterDepot", new {id = @masterDepot.Id})">Edit</a>
+                                        </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+@section scripts
+{
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Content/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Content/js/vendors.js"></script>
+    <Script>
+
+        $(document).ready(function () {
+            $('#flashMessage').delay(3000).fadeOut('slow');
+        });      
+    </Script>
+}

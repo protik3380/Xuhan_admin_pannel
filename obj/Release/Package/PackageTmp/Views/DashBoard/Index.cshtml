@@ -1,0 +1,287 @@
+﻿@using xtbdEcommerceAdminPanel.Models.View_Model
+
+@{
+    ViewBag.Title = "Product Dashboard";
+
+    Count count = ViewBag.Count;
+}
+<style>
+    .wrimagecard{	
+    margin-top: 0;
+    margin: 1rem 1.5rem;
+    padding: 5px;
+    text-align: left;
+    position: relative;
+    background: #fff;
+    box-shadow: 4px 10px 10px 0px rgba(46,61,73,0.15);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-style: normal;
+    font-family:sans-serif
+}
+.wrimagecard .fa{
+    position: relative;
+    font-size: 70px;
+    font-style: normal;
+    font-family:sans-serif
+}
+.wrimagecard-topimage_header{
+    padding: 20px;
+    font-style: normal;
+    font-family:sans-serif
+}
+a.wrimagecard:hover, .wrimagecard-topimage:hover {
+    box-shadow: 2px 4px 8px 0px rgba(46,61,73,0.2);
+}
+.wrimagecard-topimage a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    font-style: normal;
+    font-family:sans-serif
+}
+.wrimagecard-topimage_title {
+    padding: 10px;
+    height: 40px;
+    padding-bottom: 0.75rem;
+    position: relative;
+    font-style: normal;
+    font-family:sans-serif
+}
+.wrimagecard-topimage a {
+    border-bottom: none;
+    text-decoration: none;
+    color: #525c65;
+    transition: color 0.3s ease;
+    font-style: normal;
+    font-family:sans-serif
+}
+</style>
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <h3>Product Dashboard</h3>
+        @*<p class="text-subtitle text-muted">A good dashboard to display your statistics</p>*@
+    </div>
+    <section class="section">
+        <div class="row mb-2">
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Products</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.Poducts </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3'>
+                                <div class="card-right text-white">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+                            <div class='px-3 py-3'>
+                                <div class="card-right">
+                                    <span>Total Active Products - @count.ActivePoducts</span><br/><br/>
+                                    <span>Total Inactive Products - @count.InactivePoducts</span>
+                                    <input type="hidden" id="totalActiveProduct" value="@count.ActivePoducts"/>
+                                    <input type="hidden" id="totalInactiveProduct" value="@count.InactivePoducts"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Brand</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.ActiveBrands </p>
+                                </div>
+                            </div>
+                            @*<div class="chart-wrapper">
+                                <canvas id="canvas2" style="height:100px !important"></canvas>
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Total Categories</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>@count.ActiveCategories </p>
+                                </div>
+                            </div>
+                            @*<div class="chart-wrapper">
+                                <canvas id="canvas3" style="height:100px !important"></canvas>
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+        </div>
+       
+    </section>
+</div>
+<div class="row" align="center" id="masterDepot">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <div class="wrimagecard wrimagecard-topimage">
+            <a href="@Url.Action("PendingOrders", "MasterDepot")">
+                <div class="wrimagecard-topimage_header" style="background-color: rgba(255, 188, 113, 0.1)">
+                    <center><i id="totalCanceledRequest" class="fa" style="color: #f78707; font-size: 54px">5445</i></center>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <center>
+                        <p style="font-size: 13px">
+                            <strong> Pending Orders</strong>
+                        </p>
+                    </center>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <div class="wrimagecard wrimagecard-topimage">
+            <a href="@Url.Action("ConfirmedOrders", "MasterDepot")">
+                <div class="wrimagecard-topimage_header" style="background-color: rgba(237, 149, 48, 0.09)">
+                    <center><i id="totalCanceledRequest" class="fa" style="color: #e59e4d; font-size: 54px">45</i></center>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <center>
+                        <p style="font-size: 13px">
+                            <strong> Confirmed Orders</strong>
+                        </p>
+                    </center>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <div class="wrimagecard wrimagecard-topimage">
+            <a href="@Url.Action("OnProcessingOrders", "MasterDepot")">
+                <div class="wrimagecard-topimage_header" style="background-color: rgba(250, 188, 9, 0.1)">
+                    <center><i id="totalCanceledRequest" class="fa" style="color: #ffb12f; font-size: 54px">54</i></center>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <center>
+                        <p style="font-size: 13px">
+                            <strong> On Processing Orders</strong>
+                        </p>
+                    </center>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <div class="wrimagecard wrimagecard-topimage">
+            <a href="@Url.Action("ShippedOrders", "MasterDepot")">
+                <div class="wrimagecard-topimage_header" style="background-color: rgba(45, 140, 172, 0.09)">
+                    <center><i id="totalCanceledRequest" class="fa" style="color: #098ebc; font-size: 54px">8786</i></center>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <center>
+                        <p style="font-size: 13px">
+                            <strong> Shipped Orders</strong>
+                        </p>
+                    </center>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <div class="wrimagecard wrimagecard-topimage">
+            <a href="@Url.Action("DeliveredOrders", "MasterDepot")">
+                <div class="wrimagecard-topimage_header" style="background-color: rgba(37, 152, 154, 0.05)">
+                    <center><i id="totalCanceledRequest" class="fa" style="color: #26adaf; font-size: 54px">56</i></center>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <center>
+                        <p style="font-size: 13px">
+                            <strong> Delivered Orders</strong>
+                        </p>
+                    </center>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <div class="wrimagecard wrimagecard-topimage">
+            <a href="@Url.Action("ReceivedOrders", "MasterDepot")">
+                <div class="wrimagecard-topimage_header" style="background-color: rgba(26, 206, 77, 0.09)">
+                    <center><i id="totalCanceledRequest" class="fa" style="color: #00b734; font-size: 54px">54</i></center>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <center>
+                        <p style="font-size: 13px">
+                            <strong> Received Orders</strong>
+                        </p>
+                    </center>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <div class="wrimagecard wrimagecard-topimage">
+            <a href="@Url.Action("RejectedOrders", "MasterDepot")">
+                <div class="wrimagecard-topimage_header" style="background-color: rgba(253, 83, 38, 0.05)">
+                    <center><i id="totalCanceledRequest" class="fa" style="color: #ec3e10; font-size: 54px">5</i></center>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <center>
+                        <p style="font-size: 13px">
+                            <strong> Canceled Orders</strong>
+                        </p>
+                    </center>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+   
+    @*<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js"></script>
+    <script>$(document).ready(function () {
+    //$('#table1').DataTable({
+    //    dom: 'Bfrtip',
+    //    buttons: [
+    //        'print'
+    //    ]
+    //});
+    var activeProduct = $("#totalActiveProduct").val();
+    var inactiveProduct = $("#totalInactiveProduct").val();
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ["Active", "Inactive"],
+            datasets: [{
+                backgroundColor: [
+                  "#2ecc71",
+                  "#3498db"
+                ],
+                data: [activeProduct, inactiveProduct]
+            }]
+        }
+    });
+});</script>
+}

@@ -1,0 +1,279 @@
+﻿@using System.Globalization
+@using xtbdEcommerceAdminPanel.Models.View_Model
+@model xtbdEcommerceAdminPanel.Models.RequestDto.ReportSearchCriteria
+@{
+    ViewBag.Title = "Analysis Report";
+    var totalRevenue = ViewBag.Revenue;
+    var averageOrderValue = Convert.ToDouble(ViewBag.AverageOrderValue);
+    if (Double.IsInfinity((double)averageOrderValue) || Double.IsNaN((double)averageOrderValue))
+    {
+        averageOrderValue = 0;
+    }
+    decimal returningCustomerRate = Convert.ToDecimal(ViewBag.ReturningCustomerRate);
+    
+}
+<head>
+    <style>
+        .select2 {
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="~/Content/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/vendors/apexcharts/apexcharts.css" rel="stylesheet" />
+</head>
+
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h4>Analysis Report</h4>
+            </div>
+        </div>
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-12 col-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            @Html.Hidden("returningCustomerRate", returningCustomerRate);
+                            @using (Html.BeginForm("ShowAnalysisReport", "Report", FormMethod.Get, new {id = "salesForm", @novalidate = "novalidate"}))
+                            {
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <label>From date</label>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(model => model.StartDate, new {placeholder = "Enter from date", @class = "form-control", @readonly = "readonly"})
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label>To date</label>
+                                        @Html.TextBoxFor(model => model.EndDate, new {placeholder = "Enter to date", @class = "form-control", @readonly = "readonly"})
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label>Brands</label>
+                                        @Html.ListBoxFor(m => m.BrandIds, new MultiSelectList(ViewBag.Brands, "Id", "Name"), new {@class = "form-control", multiple = "multiple", @style = "width:100%"})
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label>Categories</label>
+                                        @Html.ListBoxFor(m => m.CategoryIds, new MultiSelectList(ViewBag.Categories, "Id", "Name"), new {@class = "form-control", multiple = "multiple", @style = "width:100%"})
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label>Master Depots</label>
+                                        @Html.ListBoxFor(m => m.MasterDepotIds, new MultiSelectList(ViewBag.MasterDepots, "Id", "Name"), new {@class = "form-control", multiple = "multiple", @style = "width:100%"})
+                                    </div>
+
+                                    <div class="col-12 d-flex justify-content-end" style="margin-top: 20px">
+                                        <button type="submit" class="btn btn-success">Show</button>
+                                        <a class="btn btn-outline-dark mr-1 mb-1" style="margin-left: 5px;" href="@Url.Action("Analysis", "Report")">Reset</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        <div class="container-fluid">
+            <div class="row" align="center">
+                
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="wrimagecard wrimagecard-topimage card">      
+                            <div class="wrimagecard-topimage_header" style="height: 180px; padding: 60px;background-color: rgba(255, 188, 113, 0.1)">
+                                <center><i class="fa" style="color: #f78707; font-size: 20px;">&#2547;@Convert.ToDecimal(totalRevenue).ToString("N", CultureInfo.CreateSpecificCulture("bn-BD"))</i></center>
+                            </div>
+                            <div class="wrimagecard-topimage_title" style="height: 50px">
+                                <center>
+                                    <p style="font-size: 13px">
+                                        <strong>Total Revenue</strong>
+                                    </p>
+                                </center>
+                            </div>
+                    </div>
+                </div>
+                
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="wrimagecard wrimagecard-topimage card">      
+                        <div class="wrimagecard-topimage_header" style="height: 180px; padding: 60px;background-color: rgba(255, 188, 113, 0.1)">
+                            <center><i id="totalPendingOrder" class="fa" style="color: #f78707; font-size: 20px;">&#2547;@Convert.ToDecimal(averageOrderValue).ToString("N", CultureInfo.CreateSpecificCulture("bn-BD"))</i></center>
+                        </div>
+                        <div class="wrimagecard-topimage_title" style="height: 50px">
+                            <center>
+                                <p style="font-size: 13px">
+                                    <strong>Average Order Value</strong>
+                                </p>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="card" >
+                        <div class="card-body">
+                            <div id="radialGradient"></div>
+                        </div>
+                        <div  style="height: 50px">
+                            <center>
+                                <p style="font-size: 13px">
+                                    <strong>Returning Customer Rate</strong>
+                                </p>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</div>
+
+
+@section scripts{
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Content/js/vendors.js"></script>
+    <script src="~/Content/js/select2.min.js"></script>
+<script src="~/Content/vendors/apexcharts/apexcharts.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+        function createModal(url) {
+            $('#modelContent').load(url);
+            $('#myModal').modal('show');
+        }
+        $(document).ready(function () {
+
+            $("#myModal").on("hidden.bs.modal", function () {
+                $("#modelContent").html("");
+            });
+
+            $('#BrandIds').select2({
+                placeholder: {
+                    id: '-1', // the value of the option
+                    text: 'Select brand(s)',
+                    tokenSeparators: [',']
+                }
+            });
+
+            $('#CategoryIds').select2({
+                placeholder: {
+                    id: '-1', // the value of the option
+                    text: 'Select categorie(s)'
+                }
+            });
+
+            $('#MasterDepotIds').select2({
+                placeholder: {
+                    id: '-1', // the value of the option
+                    text: 'Select masterDepot(s)'
+                }
+            });
+
+
+
+            $("#StartDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "2019:2050",
+                showAnim: "slide",
+                dateFormat: 'dd MM,yy'
+            });
+            $("#EndDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "2019:2050",
+                showAnim: "slide",
+                dateFormat: 'dd MM,yy'
+            });
+        });
+        var returningCustomerRate = document.getElementById('returningCustomerRate').value;
+        var radialGradientOptions = {
+            series: [returningCustomerRate],
+            chart: {
+                height: 122,
+                type: "radialBar",
+                toolbar: {
+                    show: true,
+                },
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -135,
+                    endAngle: 225,
+                    hollow: {
+                        margin: 0,
+                        size: "70%",
+                        background: "#fff",
+                        image: undefined,
+                        imageOffsetX: 0,
+                        imageOffsetY: 0,
+                        position: "front",
+                        dropShadow: {
+                            enabled: true,
+                            top: 3,
+                            left: 0,
+                            blur: 4,
+                            opacity: 0.24,
+                        },
+                    },
+                    track: {
+                        background: "#fff",
+                        strokeWidth: "67%",
+                        margin: 0, // margin is in pixels
+                        dropShadow: {
+                            enabled: true,
+                            top: -3,
+                            left: 0,
+                            blur: 4,
+                            opacity: 0.35,
+                        },
+                    },
+
+                    dataLabels: {
+                        show: true,
+                        name: {
+                            offsetY: -10,
+                            show: true,
+                            color: "#888",
+                            fontSize: "15px",
+                        },
+                        value: {
+                            formatter: function (val) {
+                                return parseInt(val);
+                            },
+                            color: "#111",
+                            fontSize: "15px",
+                            show: true,
+                        },
+                    },
+                },
+            },
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shade: "dark",
+                    type: "horizontal",
+                    shadeIntensity: 0.5,
+                    gradientToColors: ["#ABE5A1"],
+                    inverseColors: true,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 100],
+                },
+            },
+            stroke: {
+                lineCap: "round",
+            },
+            labels: ["Percent"],
+        };
+        
+        var radialGradient = new ApexCharts(document.querySelector("#radialGradient"), radialGradientOptions);
+        radialGradient.render();
+       
+    </script>
+}

@@ -1,0 +1,212 @@
+﻿@using System.Globalization
+@using xtbdEcommerceAdminPanel.Models
+@using xtbdEcommerceAdminPanel.Models.View_Model
+@using xtbdEcommerceAdminPanel.Utility
+@model xtbdEcommerceAdminPanel.Models.RequestDto.SalesByProductDto
+@{
+    ViewBag.Title = "Sales by Product";
+    List<SalesByProductVM> sales = ViewBag.Sales;
+}
+<head>
+    <style>
+        .select2 {
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/Content/vendors/simple-datatables/style.css">
+    <link href="~/Content/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h4>Sales by Product Report</h4>
+            </div>
+        </div>
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-12 col-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("ShowSalesByProductReport", "Report", FormMethod.Get, new { id = "salesForm", @novalidate = "novalidate" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <label>From date</label>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(model => model.StartDate, new { placeholder = "Enter from date", @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label>To date</label>
+                                        @Html.TextBoxFor(model => model.EndDate, new { placeholder = "Enter to date", @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label>Brands</label>
+                                        @Html.ListBoxFor(m => m.BrandIds, new MultiSelectList(ViewBag.Brands, "Id", "Name"), new { @class = "form-control", multiple = "multiple",@style = "width:100%" })
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label>Categories</label>
+                                        @Html.ListBoxFor(m => m.CategoryIds, new MultiSelectList(ViewBag.Categories, "Id", "Name"), new { @class = "form-control", multiple = "multiple", @style = "width:100%" })
+                                    </div>
+
+                                    <div class="col-12 d-flex justify-content-end" style="margin-top: 20px">
+
+                                        <button type="submit" class="btn btn-success">Show</button>
+                                        @if (sales != null)
+                                        {
+                                            if (sales.Count > 0)
+                                            {
+                                                <a class="btn btn-primary" style="margin-left: 5px;" id="downloadLink" onclick="exportF(this)">Export to excel</a>
+                                            }
+                                        }
+                                        <a class="btn btn-outline-dark mr-1 mb-1" style="margin-left: 5px;" href="@Url.Action("SalesByProduct", "Report")">Reset</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-lg-12">
+                <div class="card" id="contentData">
+                    <div id="searchingItems"></div>
+                    <div class="card-body">
+                        <table class='table table-striped' id="table1">
+                            <thead>        
+                            <tr>
+                                <th>SL</th>
+                                <th>Product Name</th>
+                                <th>Product Unit</th>
+                                <th>Brand</th>
+                                <th>Category</th>
+                                <th>Total Products</th>
+                                <th>Price</th>
+                                <th>Orders</th>
+
+                                @*<th class="col-lg-1">SL</th>
+                                        <th class="col-lg-1">Product Name</th>
+                                        <th class="col-lg-2">Product Unit</th>
+                                        <th class="col-lg-2">Brand</th>
+                                        <th class="col-lg-2">Max Order Amount</th>
+                                        <th class="col-lg-2">Validity</th>
+                                        <th class="col-lg-2">Status</th>*@
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (sales != null)
+                            {
+                                if (sales.Count > 0)
+                                {
+                                    var count = 1;
+                                    foreach (var sale in sales)
+                                    {
+                                        <tr>
+                                            <td>@(count++)</td>
+                                            <td>@sale.ProductName</td>
+                                            <td>@sale.ProductUnit</td>
+                                            <td>@sale.BrandName</td>
+                                            <td>@sale.CategoryName</td>
+                                            <td>@sale.TotalProducts</td>
+                                            <td style="text-align: right">@Convert.ToDecimal(sale.TotalPrice).ToString("N", CultureInfo.CreateSpecificCulture("bn-BD"))</td>
+                                            <td>@sale.TotalOrders</td>
+                                        </tr>
+                                    }
+
+                                }
+                            }
+
+                            </
+                            tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@section scripts{
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Content/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Content/js/vendors.js"></script>
+    <script src="~/Content/js/select2.min.js"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('#BrandIds').select2({
+                placeholder: {
+                    id: '-1', // the value of the option
+                    text: 'Select brand(s)',
+                    tokenSeparators: [',']
+                }
+            });
+
+            $('#CategoryIds').select2({
+                placeholder: {
+                    id: '-1', // the value of the option
+                    text: 'Select categorie(s)'
+                }
+            });
+
+
+
+            $("#StartDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "2019:2050",
+                showAnim: "slide",
+                dateFormat: 'dd MM,yy'
+            });
+            $("#EndDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "2019:2050",
+                showAnim: "slide",
+                dateFormat: 'dd MM,yy'
+            });
+        });
+
+        function exportF(elem) {
+
+            var brandIds = "";
+            var categoryIds = "";
+            var selectedBrand = $('#BrandIds').select2("data");
+            for (var i = 0; i <= selectedBrand.length - 1; i++) {
+                console.log(selectedBrand[i].text);
+                brandIds += selectedBrand[i].text + ' ';
+            }
+
+            var selectedCategory = $('#CategoryIds').select2("data");
+            for (var i = 0; i <= selectedCategory.length - 1; i++) {
+                console.log(selectedCategory[i].text);
+                categoryIds += selectedCategory[i].text + ' ';
+            }
+
+            var ToDate = $("#StartDate").val();
+            var FromDate = $("#EndDate").val();
+            $("#searchingItems").append("Brand(s):  " + brandIds + " </br>Categorie(s):  " + categoryIds + " </br>From:  " + FromDate + " </br>Date:  " + ToDate);
+            var table = document.getElementById("contentData");
+            var html = table.outerHTML;
+            var url = 'data:application/ms-excel,' + escape(html); // Set your html table into url
+            elem.setAttribute("href", url);
+            elem.setAttribute("download", "Sales-By-Product.xls"); // Choose the file name
+            $("#searchingItems").empty();
+            return false;
+        }
+    </script>
+}

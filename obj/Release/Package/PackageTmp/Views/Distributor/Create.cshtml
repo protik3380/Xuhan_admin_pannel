@@ -1,0 +1,232 @@
+﻿@model xtbdEcommerceAdminPanel.Models.RequestDto.DistributorDto
+@{
+    ViewBag.Title = "Distributor";
+}
+<head>
+    <style>
+        label.error {
+            color: red;
+        }
+    </style>
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Distributor Setup</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Distributor</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Distributor</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add Distributor</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index","Distributor")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "Distributor", FormMethod.Post, new { id = "distributorForm", @class = "form form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label>Name</label>
+                                            <input class="form-control" type="text" name="Name" id="Name" placeholder="Distributor name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label">Contact Person</label>
+                                            <input class="form-control" type="text" name="ContactPerson" id="ContactPerson" placeholder="Contact person">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label">Mobile No</label>
+                                            <input class="form-control" type="text" name="Phone" id="Phone" maxlength="11" placeholder="Mobile no">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label">E-Mail</label>
+                                            <input class="form-control" type="text" name="Email" id="Email" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label">Master Depot</label>
+                                            @Html.DropDownListFor(model => model.MasterDepotId, new SelectList(ViewBag.MasterDeports, "Id", "Name"), "---- Select Master Depot ----", new { @class = "form-control" })<i></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label">District</label>
+                                            @Html.DropDownList("districtId", new SelectList(ViewBag.Districts, "Id", "DistrictName"), "---- Select District ----", new { @class = "form-control" })<i></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label">Thana</label>
+                                            @Html.DropDownListFor(model => model.ThanaId, Enumerable.Empty<SelectListItem>(), "---- Select thana ----", new { @class = "form-control" })<i></i>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label">Address</label>
+                                            <textarea class="form-control" rows="4" id="Address" name="Address" placeholder="Address"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 col-12">                          
+                                    </div>
+                                    
+
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label class="label"></label>
+                                            <div class="checkbox">
+                                                @Html.CheckBoxFor(model => model.IsActive, new { id = "IsActive", @class = "form-check-input" })
+                                                <i></i>Is Active?
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" id="AddButton" class="btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#IsActive').attr('checked', true);
+            $("#districtId").change(function () {
+
+                var id = $("#districtId").val();
+                var product = { id: id };
+                $("#ThanaId").empty();
+                $("#ThanaId").append('<option value="" selected>Select Thana</option>');
+
+                $.ajax({
+                    url: '@Url.Action("GetThanaByDistrict", "DropDown")',
+                    type: "GET",
+                    dataType: 'JSON',
+                    contentType: "application/json; charset=utf-8",
+                    data: product,
+                    success: function (data) {
+                        $.each(data,
+                            function (index, value) {
+                                $("#ThanaId").append('<option value="' +
+                                    value.Id +
+                                    '">' +
+                                    value.ThanaName +
+                                    '</option>');
+                            });
+                    },
+                    error: function () {
+                        alert("Something went wrong");
+                    }
+
+                });
+            });
+
+            $(function () {
+                setTimeout(function () {
+                    $("#flashMessage").hide('blind', {}, 500);
+                },
+                    5000);
+            });
+        });
+        jQuery.validator.addMethod("phone", function (phone_number, element) {
+            phone_number = phone_number.replace(/\s+/g, "");
+            return this.optional(element) || phone_number.length > 10 &&
+                phone_number.match(/\+?(88)?01[567893][0-9]{8}\b/);
+        }, "Invalid phone number");
+        $("#distributorForm").validate({
+            rules: {
+                MasterDepotId:"required",
+                districtId: "required",
+                ThanaId: "required",
+                Name: "required",
+                ContactPerson: "required",
+                Phone: {
+                    required: true,
+                    phone: true,
+                    number: true
+                },
+                Email: {
+                    required: true,
+                    email: true
+                },
+                Address: "required"
+            },
+            messages: {
+                MasterDepotId:"Please select master depot",
+                districtId: "Please select a district",
+                ThanaId: "Please enter thana",
+                Name: "Please enter name",
+                ContactPerson: "Please enter contact person",
+                Phone: {
+                    required: "Please enter a mobile no",
+                    phone: "Please enter a valid mobile no. Example - 01xxxxxxxxx",
+                    number: "please enter digits"
+                },
+                Email: {
+                    required: "Please enter email address",
+                    email: "Please enter a valid email address. Example - abc@gmail.com"
+                },
+                Address: "Please enter address"
+            }
+        });
+        $("#Phone").keydown(function (e) {
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                (e.keyCode === 65 && e.ctrlKey === true) ||
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                return;
+            }
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+}
+
+
+
+
+

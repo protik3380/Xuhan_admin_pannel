@@ -1,0 +1,117 @@
+﻿@using xtbdEcommerceAdminPanel.Models
+@using xtbdEcommerceAdminPanel.Models.View_Model
+@using xtbdEcommerceAdminPanel.Utility
+@model xtbdEcommerceAdminPanel.Models.Category
+@{
+    ViewBag.Title = "Category Edit";
+    var baseAddress = BaseUrl.imageUrl;
+}
+<head>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Category</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Category</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Update category</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index","Category")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Edit", "Category", FormMethod.Post, new { @enctype = "multipart/form-data", id = "addBrandForm", @class = "form form-horizontal" }))
+                            {
+                                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                                if (@Model != null)
+                                {
+                                    @Html.HiddenFor(model => model.Id)
+                                    @Html.HiddenFor(model => model.CreatedAt)
+                                    @Html.HiddenFor(model => model.CreatedBy)
+                                    @Html.HiddenFor(model => model.Image)
+
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Category Name</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter category name", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Description</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+
+                                                @Html.TextAreaFor(model => model.Description, new { id = "Description", placeholder = "Category description", @class = "form-control" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Logo</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+
+                                                @Html.TextBoxFor(model => model.ImageFile, new { data_val = false, id = "ImageFile", onchange = "this.parentNode.nextSibling.value = this.value", type = "file", @class = "input input-file" })
+                                            </div>
+                                            <div class="col-md-4"></div>
+                                            <div class="col-md-8 form-group">
+                                                @if (Model.Image != null)
+                                                {
+                                                    <img src="@BaseUrl.imageUrl@Model.Image" width="100px" height="100px" style="border-radius: 5px; border: 1px solid #efefef" alt="tab-img">
+                                                }
+                                            </div>
+                                            <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                <div class='form-check'>
+                                                    <div class="checkbox">
+                                                        @Html.CheckBoxFor(model => model.IsActive, new { id = "IsActive", @class = "form-check-input" })
+                                                        <i></i>Is Active?
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary mr-1 mb-1">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-12"></div>
+        </div>
+    </section>
+
+</div>
+@section Scripts {
+
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#flashMessage').delay(3000).fadeOut('slow');
+        });
+    </script>
+
+}

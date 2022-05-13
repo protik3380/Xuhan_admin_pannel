@@ -1,0 +1,157 @@
+﻿@using Vereyon.Web
+@using xtbdEcommerceAdminPanel.Utility
+@model xtbdEcommerceAdminPanel.Models.RequestDto.ProductDiscountDto
+@{
+    ViewBag.Title = "Product Discount";
+}
+<head>
+    <style>
+        label.error {
+            color: red;
+        }
+    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Product Discount Setup</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Product Discount</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Product Discount</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Product Discount</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index","ProductDiscount")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Edit", "ProductDiscount", FormMethod.Post, new { id = "productDiscountForm", @class = "form form-horizontal" }))
+                            {
+                                @Html.HiddenFor(model => model.Id)
+                                @Html.HiddenFor(model => model.ProductUnitId)
+                                @Html.RenderFlashMessages()
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Category</label>
+                                            @Html.DropDownList("categoryId", new SelectList(ViewBag.Categories, "Id", "Name"), "---- Select Category ----", new { @class = "form-control", @disabled = "disabled" })<i></i>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Start Date</label>
+                                            @Html.TextBoxFor(model => model.ActivateDate, new { @class = "form-control", placeholder = "Start date", id = "ActivateDate" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Products</label>
+                                            @Html.DropDownList("Product", new SelectList(ViewBag.Products, "Id", "Name"), "---- Select Product ----", new { @class = "form-control", @disabled = "disabled" })<i></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">End Date</label>
+                                            @Html.TextBoxFor(model => model.EndValidityDate, new { @class = "form-control", placeholder = "End date", id = "EndValidityDate" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Product Unit</label>
+                                            @Html.DropDownList("ProductUnitId", new SelectList(ViewBag.ProductUnits, "Id", "StockKeepingUnit"), "---- Select Product Unit ----", new { @class = "form-control", @disabled = "disabled" })<i></i>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Discount Percentage</label>
+                                            @Html.TextBoxFor(model => model.DiscountPercentage, new { placeholder = "Discount percentage", @class = "form-control" })
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" id="AddButton" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $("#productDiscountForm").validate({
+            rules: {
+                categoryId: "required",
+                ProductUnitId: "required",
+                Product: "required",
+                DiscountPercentage: {
+                    required: true,
+                    range: [0, 100],
+                    number: true
+                },
+                EndValidityDate: {
+                    required: true
+                },
+                ActivateDate: {
+                    required: true
+                }
+            },
+            messages: {
+                categoryId: "Please select a category",
+                ProductUnitId: "Please enter product unit",
+                DiscountPercentage: {
+                    required: "Please enter discount percentage"
+                },
+                EndValidityDate: {
+                    required: "Please enter end date"
+                },
+                ActivateDate: {
+                    required: "Please enter an start date"
+                },
+                Product: {
+                    required: "Please select product"
+                }
+            }
+        });
+
+        $(document).ready(function () {
+            $("#EndValidityDate").datepicker();
+            $("#ActivateDate").datepicker();
+            $('#categoryId').val(@ViewBag.CategoryID);
+            $('#Product').val(@ViewBag.ProductID);
+            $('#ProductUnitId').val(@Model.ProductUnitId);
+        });
+    </script>
+
+}
+
+
+

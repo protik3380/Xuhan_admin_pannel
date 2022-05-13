@@ -1,0 +1,110 @@
+﻿@using Vereyon.Web
+@using xtbdEcommerceAdminPanel.Models
+@{
+    ViewBag.Title = "Product Index";
+    List<Product> products = ViewBag.Products;
+}
+
+<link rel="stylesheet" href="~/Content/vendors/simple-datatables/style.css">
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Product List</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Product</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                Product Table
+                <a href="@Url.Action("Create","Product")" class="btn btn-success mr-1 mb-1" style="float: right"><i data-feather="plus"></i>Add New Product</a>
+            </div>
+            @Html.RenderFlashMessages()
+            <div class="card-body">
+                <table class='table table-striped' id="table1">
+                    <thead>
+                        <tr style="width:100%">
+                            <th>SL</th>
+                            <th>Information</th>
+                            <th>Description</th>
+                            <th>Use Process</th>
+                            @*<th>Ingredients</th>*@
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (products != null)
+                        {
+                            var count = 1;
+                            foreach (Product product in products)
+                            {
+                                <tr style="width:100%">
+                                    <td style="width:5%">@(count++)</td>
+                                   
+                                    <td style="width:25%">
+                                        Name: @product.Name<br/><br />
+                                        Brand: @product.Brand.Name<br /><br />
+                                        Category: @product.Category.Name<br /><br />
+                                        Status: 
+                                        @{
+
+                                            var activeStatus = product.IsActive ? "Active" : "InActive";
+                                            var statusClass = product.IsActive ? "bg-success" : "bg-danger";
+                                           <span class="badge @statusClass">@activeStatus</span>
+                                        }
+                                       
+                                    </td>
+                                    <td style="width:30%">@product.Description</td>
+                                    <td style="width:25%">@product.UseProcess</td>
+                                    @*<td style="width: 35%">@product.Ingredients</td>*@
+                                    <td style="width:15%">
+                                        <a class="btn btn-primary mb-1" href="@Url.Action("Edit", "Product", new {id = @product.Id})">Edit</a>                                        
+                                        <input  type="button" class="btn btn-danger pl-3 pr-3" id="deleteButton_@product.Id" onclick="deleteProduct(@product.Id)" value="Delete" />
+                                    </td>
+                                </tr>
+                                }
+                            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+@section scripts
+{
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Content/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Content/js/vendors.js"></script>
+    <Script>
+
+        function deleteProduct(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to delete this product ?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#739e73',
+                cancelButtonColor: '#A90329',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    location.href = '/Product/delete/' + id;
+                }
+            });
+        }
+    </Script>
+}

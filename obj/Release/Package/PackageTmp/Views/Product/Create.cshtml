@@ -1,0 +1,186 @@
+﻿@using Vereyon.Web
+@model xtbdEcommerceAdminPanel.Models.RequestDto.ProductDto
+@{
+    ViewBag.Title = "Product Create";
+}
+<head>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Product Setup</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Product</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create New Product</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add New Product</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index","Product")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { id = "addProductForm", @class = "form form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.RenderFlashMessages()
+
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>Product Name</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.TextBoxFor(model => model.Name, new { id = "Name", placeholder = "Product name", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "error" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Category</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "Id", "Name"), "---Select Category---", new { @class = "form-control", id = "ddlCategory" })<i></i>
+                                            @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "error" })
+
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Brand</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownListFor(model => model.BrandId, new SelectList(ViewBag.Brands, "Id", "Name"), "---Select Brand---", new { @class = "form-control", id = "ddlBrand" })<i></i>
+                                            @Html.ValidationMessageFor(model => model.BrandId, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Concern Tags</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            <select class="js-example-basic-multiple form-control" name="ConcernTagId" multiple="multiple" id="ddlConcern">
+                                              
+                                                @foreach (var concernTag in ViewBag.ConcernTags)
+                                                {
+                                                    <option value="@concernTag.Id">@concernTag.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-md-4">
+                                            <label>Solution Tags</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            <select class="js-example-basic-multiple form-control" name="SolutionTagId" multiple="multiple" id="ddlSoluton">
+                                                @foreach (var solutionTag in ViewBag.SolutionTags)
+                                                {
+                                                    <option value="@solutionTag.Id">@solutionTag.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Description</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.TextAreaFor(model => model.Description, new { id = "Description", placeholder = "Product description", @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Ingredients</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.TextAreaFor(model => model.Ingredients, new { id = "Ingredients", placeholder = "Product ingredients", @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Use Process</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+
+                                            @Html.TextAreaFor(model => model.UseProcess, new { id = "UseProcess", placeholder = "", @class = "form-control" })
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <label>Video Link</label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.TextBoxFor(model => model.VideoLink, new { id = "VideoLink", placeholder = "Video Link", @class = "form-control" })        
+                                        </div>
+                                        <div class="col-12 col-md-8 offset-md-4 form-group">
+                                            <div class='form-check'>
+                                                <div class="checkbox">
+                                                    @Html.CheckBoxFor(model => model.IsActive, new { id = "IsActive", @class = "form-check-input" })
+                                                    <i></i>Is Active?
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary mr-1 mb-1">Submit</button>
+                                            <input type="button" value="Reset" id="ResetButton" class="btn btn-light-secondary mr-1 mb-1" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-12"></div>
+        </div>
+    </section>
+    <!-- // Basic Horizontal form layout section end -->
+</div>
+
+
+@section Scripts {
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#ddlSoluton").select2({
+                placeholder: "--Select a solutions tags--"
+            });
+            $("#ddlConcern").select2({
+                placeholder: "--Select a concerns tags--"
+            });
+            $('#IsActive').attr('checked', true);
+        });
+
+        $("#ResetButton").click(function () {
+            $("#Name").val("");
+            $("#IsActive").prop('checked', true);
+            $("#Description").val("");
+            $("#Ingredients").val("");
+            $("#UseProcess").val("");
+            $("#VideoLink").val("");
+            $(".field-validation-error").empty();
+            $('#ddlCategory option').prop('selected', function () {
+                return this.defaultSelected;
+            });
+            $('#ddlBrand option').prop('selected', function () {
+                return this.defaultSelected;
+            });
+            $("#ddlSoluton").val([]).change();
+            $("#ddlConcern").val([]).change();
+        });
+    </script>
+
+}
+

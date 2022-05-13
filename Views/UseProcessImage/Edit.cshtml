@@ -1,0 +1,321 @@
+﻿@using xtbdEcommerceAdminPanel.Utility
+@model xtbdEcommerceAdminPanel.Models.View_Model.UseProcessVM
+@{
+    ViewBag.Title = "Use Process Image";
+}
+<head>
+    <style>
+        label.error {
+            color: red;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Use Process Image Setup</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Use Process Image</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Use Process Image</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Use Process Image</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index","UseProcessImage")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Edit", "UseProcessImage", FormMethod.Post, new { id = "useProcessForm", @enctype = "multipart/form-data", @class = "form form-horizontal" }))
+                            {
+                                @Html.HiddenFor(x => x.ProductUnitId)
+                                @Html.HiddenFor(x => x.ProductName)
+                                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Product</label>
+                                            @Html.TextBoxFor(model => model.ProductName, new { @class = "form-control", @disabled = "disabled" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Product Unit</label>
+                                            @Html.TextBoxFor(model => model.StockKeepingUnit, new { @class = "form-control", @disabled = "disabled" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 1</label>
+                                            <input class="form-control" name="UseProcessImagesForm[0].ImageLocation" id="UseProcessImagesForm[0].ImageLocation" type="file" onchange="readFirstImage(this);">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 2</label>
+                                            <input class="form-control" name="UseProcessImagesForm[1].ImageLocation" id="UseProcessImagesForm[1].ImageLocation" type="file" onchange="readSecondImage(this);">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 3</label>
+                                            <input class="form-control" name="UseProcessImagesForm[2].ImageLocation" id="UseProcessImagesForm[2].ImageLocation" type="file" onchange="readThirdImage(this);">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 4</label>
+                                            <input class="form-control" name="UseProcessImagesForm[3].ImageLocation" id="UseProcessImagesForm[3].ImageLocation" type="file" onchange="readFourthImage(this);">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 5</label>
+                                            <input class="form-control" name="UseProcessImagesForm[4].ImageLocation" id="UseProcessImagesForm[4].ImageLocation" type="file" onchange="readFifthImage(this);">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 6</label>
+                                            <input class="form-control" name="UseProcessImagesForm[5].ImageLocation" id="UseProcessImagesForm[5].ImageLocation" type="file" onchange="readSixthImage(this);">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 7</label>
+                                            <input class="form-control" name="UseProcessImagesForm[6].ImageLocation" id="UseProcessImagesForm[6].ImageLocation" type="file" onchange="readSeventhImage(this);">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Use Process Image 8</label>
+                                            <input class="form-control" name="UseProcessImagesForm[7].ImageLocation" id="UseProcessImagesForm[7].ImageLocation" type="file" onchange="readLastImage(this);">
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-12 d-flex justify-content-end" style="margin-bottom: 5px;">
+                                        <button type="submit" id="AddButton" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12 col-12">
+                                    <div class="column" style="float: left; margin-bottom: 15px;">
+                                        @if (Model.UseProcessImage[0].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[0].ImageUrl)
+                                            <img id="fImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[0].ImageUrl"  style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="fImg" src="#"  style="width: 12%;display: none;">
+                                        }
+                                        @if (Model.UseProcessImage[1].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[1].ImageUrl)
+                                            <img id="SImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[1].ImageUrl" style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="SImg" src="#" style="width: 12%;display: none;">
+                                        }
+                                        
+                                        @if (Model.UseProcessImage[2].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[2].ImageUrl)
+                                            <img id="TImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[2].ImageUrl" style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="TImg" src="#" style="width: 12%;display: none;">
+                                        }
+                                        @if (Model.UseProcessImage[3].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[3].ImageUrl)
+                                            <img id="FoImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[3].ImageUrl" style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="FoImg" src="#" style="width: 12%;display: none;">
+                                        }
+                                        
+                                        @if (Model.UseProcessImage[4].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[4].ImageUrl)
+                                            <img id="FiImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[4].ImageUrl" style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="FiImg" src="#" style="width: 12%;display: none;">
+                                        }
+                                        
+                                        @if (Model.UseProcessImage[5].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[5].ImageUrl)
+                                            <img id="SiImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[5].ImageUrl" style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="SiImg" src="#" style="width: 12%;display: none;">
+                                        }
+                                        
+                                        @if (Model.UseProcessImage[6].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[6].ImageUrl)
+                                            <img id="SeImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[6].ImageUrl" style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="SeImg" src="#" style="width: 12%;display: none;">
+                                        }
+                                        
+                                        @if (Model.UseProcessImage[7].ImageUrl != null)
+                                        {
+                                            @Html.HiddenFor(model => model.UseProcessImage[7].ImageUrl)
+                                            <img id="EiImg" src="@BaseUrl.imageUrl\@Model.UseProcessImage[7].ImageUrl" style="width: 12%">
+                                        }
+                                        else
+                                        {
+                                            <img id="EiImg" src="#" style="width: 12%;display: none;">
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+                $('#flashMessage').delay(3000).fadeOut('slow');
+            });
+
+        //$('#fImg').hide();
+        //$('#SImg').hide();
+        //$('#TImg').hide();
+        //$('#FoImg').hide();
+        //$('#FiImg').hide();
+        //$('#SiImg').hide();
+        //$('#SeImg').hide();
+        //$('#EiImg').hide();
+
+        function readFirstImage(input) {
+            if (input.files && input.files[0]) {
+                $('#fImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#fImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readSecondImage(input) {
+            if (input.files && input.files[0]) {
+                $('#SImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#SImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readThirdImage(input) {
+            if (input.files && input.files[0]) {
+                $('#TImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#TImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readFourthImage(input) {
+            if (input.files && input.files[0]) {
+                $('#FoImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#FoImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readFifthImage(input) {
+            if (input.files && input.files[0]) {
+                $('#FiImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#FiImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readSixthImage(input) {
+            if (input.files && input.files[0]) {
+                $('#SiImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#SiImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readSeventhImage(input) {
+            if (input.files && input.files[0]) {
+                $('#SeImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#SeImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readLastImage(input) {
+            if (input.files && input.files[0]) {
+                $('#EiImg').show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#EiImg').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+}
+
+
+

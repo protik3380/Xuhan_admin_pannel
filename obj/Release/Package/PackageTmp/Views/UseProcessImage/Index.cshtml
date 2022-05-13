@@ -1,0 +1,99 @@
+﻿@using xtbdEcommerceAdminPanel.Models
+@using xtbdEcommerceAdminPanel.Utility
+
+@{
+    ViewBag.Title = "Use Process Index";
+    //var banners = ViewBag.BannerList;
+}
+<link rel="stylesheet" href="~/Content/vendors/simple-datatables/style.css">
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Use Process Image List</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Use Process Image</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <a href="@Url.Action("Create","UseProcessImage")" class="btn btn-success mr-1 mb-1" style="float: right"><i data-feather="plus"></i>Add New Image</a>
+            </div>
+            <div class="card-body">
+                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                <table class='table table-striped' id="table1">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Product</th>
+                            <th>Product Unit</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @*@if (banners != null)
+                        {
+                            var count = 1;
+                            foreach (Banner banner in banners)
+                            {
+                                <tr style="width: 100%">
+                                    <td style="width: 5%">@(count++)</td>
+                                    <td style="width: 10%">
+                                        @banner.Page
+                                    </td>
+                                    <td style="width: 20%">
+                                        <img src="@BaseUrl.imageUrl/@banner.ImageUrl" class="img-responsive" style="width: 50%; height: auto" />
+
+                                    </td>
+                                    <td style="width: 10%">
+                                        @{
+
+                                            var activeStatus = banner.IsActive ? "Active" : "InActive";
+                                            var statusClass = banner.IsActive ? "bg-success" : "bg-danger";
+                                            <span class="badge @statusClass">@activeStatus</span>
+                                        }
+
+                                    </td>
+                                    <td style="width: 20%">
+
+                                        <div class="row">
+                                            <div class="col-sm-12" style="display: flex; flex-direction: row;">
+                                                <a class="btn btn-primary" href="@Url.Action("Edit", "Banner", new {id = @banner.Id})">Edit</a>
+                                                <input style="margin-left: 4px" type="button" class="btn btn-danger" id="deleteButton_@banner.Id" onclick="deleteBanner(@banner.Id)" value="Delete" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                                }
+                                            }*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+@section scripts
+{
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Content/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Content/js/vendors.js"></script>
+    <Script>
+
+        $(document).ready(function () {
+            $('#flashMessage').delay(3000).fadeOut('slow');
+        });
+
+       
+    </Script>
+}

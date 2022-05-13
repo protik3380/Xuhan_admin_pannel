@@ -1,0 +1,103 @@
+﻿@model xtbdEcommerceAdminPanel.Models.District
+@{
+    ViewBag.Title = "Create";
+}
+<head>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h4>District Setup</h4>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">District Setup</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create New District</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <!-- Basic Horizontal form layout section start -->
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+
+            <div class="col-md-12 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Create New District</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index", "District")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "District", FormMethod.Post, new { id = "addDistrictForm", @class = "form form-horizontal" }))
+                            {
+                                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-3">
+                                            <label>Name</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <div class="position-relative">
+                                                    @Html.TextBoxFor(model => model.DistrictName, new { id = "Name", placeholder = "District name", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.DistrictName, "", new { @class = "error" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2"></div>
+                                        <div class="form-group col-md-7 offset-md-5">
+                                            <div class='form-check'>
+                                                <div class="checkbox">
+                                                    @Html.CheckBoxFor(model => model.IsActive, new { id = "IsActive", @class = "form-check-input" })
+                                                    <i></i>Is Active?
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3 offset-md-9">
+                                            <div class="position-relative">
+                                                <button type="submit" class="btn btn-primary mr-1 mb-1">Save</button>
+                                                <input type="button" value="Reset" id="ResetButton" class="btn btn-light-secondary mr-1 mb-1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- // Basic Horizontal form layout section end -->
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#IsActive').attr('checked', true);
+            $('#flashMessage').delay(3000).fadeOut('slow');
+        });
+
+        $("#ResetButton").click(function () {
+            $("#Name").val("");
+            $("#IsActive").prop('checked', true);
+            $(".field-validation-error").empty();
+        });
+    </script>
+
+}

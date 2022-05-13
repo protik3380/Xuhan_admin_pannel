@@ -1,0 +1,16 @@
+﻿@using xtbdEcommerceAdminPanel.Models.RequestDto
+@using xtbdEcommerceAdminPanel.Utility
+@model xtbdEcommerceAdminPanel.Models.View_Model.UseProcessVM
+
+<div id="gallery_hotel">
+    <img id="largeImage" src="@BaseUrl.imageUrl\@Model.UseProcessImage[0].ImageUrl" />
+</div>
+<div id="thumbs_hotel">
+    @if (Model.UseProcessImage.Any())
+    {
+        foreach (var image in Model.UseProcessImage)
+        {
+            <img style="width: 120px; height: 80px" src="@BaseUrl.imageUrl\@image.ImageUrl" />
+        }
+    }
+</div>

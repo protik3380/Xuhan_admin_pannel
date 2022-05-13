@@ -1,0 +1,83 @@
+﻿@using xtbdEcommerceAdminPanel.Models
+@model xtbdEcommerceAdminPanel.Models.Order
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLongTitle">Order Details</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <table class='table table-striped' id="table1">
+        <thead>
+            <tr>
+                <th>SL.</th>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>QTY</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.OrderDetails != null)
+            {
+                var count = 1;
+                foreach (OrderDetail orderDetail in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>@(count++)</td>
+                        <td>@orderDetail.ProductUnit.Product.Name</td>
+                        <td>@orderDetail.UnitPrice</td>
+                        <td>
+                            @orderDetail.Quantity
+                        </td>
+                        @{
+                            decimal totalPrice = @orderDetail.Quantity * @orderDetail.UnitPrice;
+                        }
+                        <td class="text-right">@totalPrice BDT</td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+    <table class="table" id="table2">
+
+        <tbody class="text-right">
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                Subtotal
+            </td>
+            <td>@Model.TotalAmountAfterDiscount BDT</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                Delivery charge
+            </td>
+            <td>@Model.DeliveryCharge BDT</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                Discount
+            </td>
+            <td>@Model.TotalDiscountAmount BDT</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                Grand Total
+            </td>
+            <td>@Model.TotalAmount BDT</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    
+</div>

@@ -1,0 +1,123 @@
+﻿@using xtbdEcommerceAdminPanel.Models
+@{
+    ViewBag.Title = "Distributor Index";
+    var distributorList = ViewBag.DistributorList;
+}
+
+<link rel="stylesheet" href="~/Content/vendors/simple-datatables/style.css">
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Distributor List</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Distributor</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+
+                <a href="@Url.Action("Create","Distributor")" class="btn btn-success mr-1 mb-1" style="float: right"><i data-feather="plus"></i>Add Distributor</a>
+            </div>
+            <div class="card-body table-responsive">
+                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                <table class="table table-striped" id="table1">
+                    <thead>
+                        <tr  class="d-flex">
+                            <th class="col-1">SL</th>
+                            <th class="col-2">Distributor Name</th>
+                            <th class="col-2">Thana</th>
+                            <th class="col-2">Master Depot Name</th>
+                            <th class="col-2">Phone</th>
+                            <th class="col-2">Email</th>
+                            <th class="col-2">Contact Person</th>
+                            <th class="col-2">Status</th>
+                            <th class="col-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (distributorList != null)
+                        {
+                            var count = 1;
+                            foreach (Distributor distributor in distributorList)
+                            {
+                                <tr class="d-flex">
+                                    <td class="col-1">@(count++)</td>
+
+                                    <td class="col-2">
+                                        @distributor.Name
+                                    </td>
+                                    @if (distributor.Thana != null)
+                                    {
+                                        <td class="col-2">
+                                            @distributor.Thana.ThanaName
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="col-2"></td>
+                                    }
+                                    @if (distributor.MasterDepot != null)
+                                    {
+                                        <td class="col-2">
+                                            @distributor.MasterDepot.Name
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="col-2"></td>
+                                    }
+
+                                    <td class="col-2">
+                                        @distributor.Phone
+                                    </td>
+                                    <td class="col-2">
+                                        @distributor.Email
+                                    </td>
+                                    <td class="col-2">
+                                        @distributor.ContactPerson
+                                    </td>
+
+                                    <td class="col-2">
+                                        @{
+
+                                            var activeStatus = distributor.IsActive ? "Active" : "InActive";
+                                            var statusClass = distributor.IsActive ? "bg-success" : "bg-danger";
+                                            <span class="badge @statusClass">@activeStatus</span>
+                                        }
+
+                                    </td>
+                                    <td class="col-2">
+                                        <a class="btn btn-primary" href="@Url.Action("Edit", "Distributor", new {id = @distributor.Id})">Edit</a>
+                                    </td>
+                                </tr>
+                                                }
+                                            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+@section scripts
+{
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Content/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Content/js/vendors.js"></script>
+    <Script>
+        $(document).ready(function () {
+            $('#flashMessage').delay(3000).fadeOut('slow');
+        });
+    </Script>
+}

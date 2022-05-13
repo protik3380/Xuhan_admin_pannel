@@ -1,0 +1,151 @@
+﻿@using xtbdEcommerceAdminPanel.Models
+@{
+    ViewBag.Title = "Assign Order";
+    List<Deliveryman> deliveryMen = (List<Deliveryman>)ViewBag.DeliverymanList;
+    List<Order>orders= (List<Order>)ViewBag.Orders;
+    int row = 0;
+}
+
+<link rel="stylesheet" href="~/Content/vendors/simple-datatables/style.css">
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Assign Order to Deliveryman</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Assign Order</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Assign Order to Deliveryman</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                <table class='table table-striped' id="table1">
+                    @if (orders != null)
+                    {
+                        <thead>
+                        <tr>
+                            <th>Order No</th>
+                            <th>Customer Name</th>
+                            <th>Delivery Address</th>
+                            <th>Contact</th>                            
+                            <th>Action</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @using (Html.BeginForm("", "AssignOrder", FormMethod.Post, new {id = "assignForm"}))
+                        {
+                            int i = 0;
+                            foreach (Order data in orders)
+                            {                         
+                                <tr>
+                                    <td><a href="#" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="createModal('@Url.Action("ViewOrderDetails", "AssignOrder", new {id = data.Id})')" style="cursor: pointer;text-decoration-color:blue">@data.OrderNo</a></td>
+                                    <td>@data.CustomerName</td>
+                                    <td>@data.DeliveryAddress</td>
+                                    <td>@data.MobileNo</td> 
+                                    <td>
+                                        <label class="select">
+                                            <input type="hidden" id="DeliveryMan" value="@deliveryMen"/>
+                                            <input type="hidden" id="MobileNo[@i]" value=""/>
+                                            @Html.DropDownList("DeliveryManId_" + data.Id, new SelectList(deliveryMen, "Id", "Name"), "----Select delivery man----", new {@class = " form-control", onchange = "ShowDeliveryManInfo(" + data.Id + ")"})
+                                            <p id="errorMessage_@data.Id" style="color: red"></p>
+                                            <div id="deliveryManInfo_@data.Id">
+
+                                            </div>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-default btn-primary" onclick="AssignOrder(@data.Id)"> Assign </a>
+                                    </td>
+                                </tr>
+                                row++;
+                                i++;
+                            }
+                        }
+                        </tbody>
+                    }
+                </table>                
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal fade bd-example-modal-lg" tabindex="-1" id="myModal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modelContent">
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Content/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Content/js/vendors.js"></script>
+    <Script>
+        function createModal(url) {
+            $('#modelContent').load(url);
+            $('#myModal').modal('show');
+        }
+        $(document).ready(function () {
+            $('#flashMessage').delay(3000).fadeOut('slow');
+            $("#myModal").on("hidden.bs.modal", function () {
+                $("#modelContent").html("");
+            });
+        });
+
+        function AssignOrder(id) {
+            var orderId = id;
+            var deliveryManId = $("#DeliveryManId_" + id + " option:selected").val();
+            $("#errorMessage_" + id).empty();
+            if (deliveryManId === "") {
+                $("#errorMessage_" + id).append("Please select a delivery man");
+                return false;
+            }
+            var assignOrder = {
+                OrderId: orderId,
+                DeliveryManId: deliveryManId
+            };
+            $.ajax({
+                type:"POST",
+                url: "@Url.Action("AssignOrder","AssignOrder")",
+                data: assignOrder,
+                success: function (data) {
+                    window.location.reload();
+                }
+            });
+        }
+        function ShowDeliveryManInfo(id) {
+            $("#deliveryManInfo_"+id).empty();
+            var deliveryManId = $("#DeliveryManId_" + id).val();
+            var name = $("#DeliveryManId_" + id).text();
+            var data = { deliveryManId: deliveryManId };
+            $.ajax({
+                method: 'POST',
+                url: "@Url.Action("GetDeliveryManDetailsById", "AssignOrder")",
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                crossDomain: true,
+                success: function (data) {
+                    var name = data.DeliveryMan.Name;
+                    var mobileNo = data.DeliveryMan.MobileNo;
+                    $("#deliveryManInfo_"+id).append("<p>Name: " + name + "</p><p>Mobile: " + mobileNo + "</p>");
+                    $("#errorMessage_" + id).empty();
+                    //var x = data;
+                    //toastr.success("Delivery man has been changed");
+                },
+                error: function () {
+                    // toastr.error("Something went wrong");
+                }
+            });
+        }
+    </Script>
+}

@@ -1,0 +1,243 @@
+﻿@using Vereyon.Web
+@model xtbdEcommerceAdminPanel.Models.RequestDto.ProductDiscountDto
+@{
+    ViewBag.Title = "Product Discount";
+}
+<head>
+    <style>
+        label.error {
+            color: red;
+        }
+
+        
+    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Product Discount Setup</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Product Discount</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Product Discount</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add Product Discount</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index","ProductDiscount")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "ProductDiscount", FormMethod.Post, new { id = "productDiscountForm", @class = "form form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.RenderFlashMessages()
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Products</label>
+                                            @Html.DropDownList("Product", new SelectList(ViewBag.Products, "Id", "Name"), "---- Select Product ----", new { @class = "form-control" })<i></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Product Unit</label>
+                                            @Html.DropDownListFor(model => model.ProductUnitId, Enumerable.Empty<SelectListItem>(), "---- Select Product Unit ----", new { @class = "form-control" })<i></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Start Date</label>
+                                            @Html.TextBoxFor(model => model.ActivateDate, new { @class = "form-control", placeholder = "Start date", id = "ActivateDate", autocomplete = "off" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">End Date</label>
+                                            @Html.TextBoxFor(model => model.EndValidityDate, new { @class = "form-control", placeholder = "End date",id= "EndValidityDate", autocomplete = "off" })                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Discount Percentage</label>
+                                            @Html.TextBoxFor(model => model.DiscountPercentage, new { placeholder = "Discount percentage", @class = "form-control", autocomplete = "off" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                    </div>
+
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" id="AddButton" class="btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+            $(document).on('change keyup',
+                '.required',
+                function(e) {
+                    var disabled = true;
+                    $(".required").each(function() {
+                        var value = this.value;
+                        if ((value) && (value.trim() != '')) {
+                            disabled = false;
+                        } else {
+                            disabled = true;
+                            return false;
+                        }
+                    });
+
+                    if (disabled) {
+                        $('.toggle-disabled').prop("disabled", true);
+                    } else {
+                        $('.toggle-disabled').prop("disabled", false);
+                    }
+                });
+
+            $("#productDiscountForm").validate({
+                rules: {                   
+                    ProductUnitId: "required",
+                    Product: "required",
+                    DiscountPercentage: {
+                        required: true,
+                        range: [0, 100],
+                        number: true
+                    },
+                    EndValidityDate: {
+                        required: true
+                    },
+                    ActivateDate: {
+                        required: true
+                    }
+                },
+                messages: {                  
+                    ProductUnitId: "Please enter product unit",
+                    DiscountPercentage: {
+                        required: "Please enter discount percentage"
+                    },
+                    EndValidityDate: {
+                        required: "Please enter end date"
+                    },
+                    ActivateDate: {
+                        required: "Please enter an start date"
+                    },
+                    Product: {
+                        required: "Please select product"
+                    }
+                },
+                submitHandler: function(form) {
+                    var productUnitId = $("#ProductUnitId").val();
+                    var product = { id: productUnitId };
+
+                    $.ajax({
+                        url: '@Url.Action("GetDiscountByProductUnit", "DropDown")',
+                        type: "GET",
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        data: product,
+                        success: function (data) {
+                            if (data.Id !== 0) {
+                                Swal.fire({
+                                    title: 'Previous discount will be deactivated. Do you want to add this discount ?',
+                                    type: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#739e73',
+                                    cancelButtonColor: '#A90329',
+                                    cancelButtonText: 'No',
+                                    confirmButtonText: 'Yes',
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.value) {
+                                        form.submit();
+                                    }
+                                });
+                            } else {
+                                form.submit();
+                            }
+                        },
+                        error: function () {
+                            alert("Something went wrong");
+                        }
+
+                    });
+                }
+            });
+            $(document).ready(function() {
+                $("#EndValidityDate").datepicker();
+                $("#ActivateDate").datepicker();
+                $("#Product").select2({
+                    tags: true
+                });
+                $("#Product").change(function() {
+
+                    var productId = $("#Product").val();
+                    var product = { id: productId };
+                    $("#ProductUnitId").empty();
+                    $("#ProductUnitId").append('<option value="" selected>Select Product Unit</option>');
+
+                    $.ajax({
+                        url: '@Url.Action("GetProductUnitsByProduct", "DropDown")',
+                        type: "GET",
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        data: product,
+                        success: function(data) {
+                            $.each(data,
+                                function(index, value) {
+                                    $("#ProductUnitId").append('<option value="' +
+                                        value.Id +
+                                        '">' +
+                                        value.StockKeepingUnit +
+                                        '</option>');
+                                });
+                        },
+                        error: function() {
+                            alert("Something went wrong");
+                        }
+
+                    });
+                });
+              
+                $(function() {
+                    setTimeout(function() {
+                            $("#flashMessage").hide('blind', {}, 500);
+                        },
+                        5000);
+                });
+            });
+</script>
+
+}
+
+
+

@@ -1,0 +1,131 @@
+﻿@model xtbdEcommerceAdminPanel.Models.RequestDto.AdminAccessDto
+@{
+    ViewBag.Title = "Admin";
+
+}
+<head>
+    <style>
+        .center {
+            margin-left: 30%;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .field-icon {
+            float: right;
+            margin-left: -25px;
+            margin-top: -25px;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Change password</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Change User Access</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("product","DashBoard")">Back to Dashboard</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("ChangeCrediential", "Home", FormMethod.Post, new { id = "masterDepotForm", @class = "form form-horizontal" }))
+                            {
+                                <div class='@TempData["Class"]' id="flashMessage" role="alert">@TempData["Message"]</div>
+                                <div class="center">                    
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label>Email</label>
+                                            @Html.TextBoxFor(model => model.Email, new { placeholder = "Email address", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <label>New Password</label>
+                                            @Html.PasswordFor(model => model.Password, new {placeholder = "New password", @class = "form-control"})
+                                            <span toggle="#Password" class="fa fa-fw fa-eye field-icon toggle-NewPassword"></span>
+                                            @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-2 col-12">
+                                        <div>
+                                            <label class="label">Confirm Password</label>
+                                            @Html.PasswordFor(model => model.ConfirmPassword, new {placeholder = "Re type password", @class = "form-control"})
+                                            <span toggle="#ConfirmPassword" class="fa fa-fw fa-eye field-icon toggle-ConfirmPassword"></span>
+                                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new {@class = "text-danger"})
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-2">
+                                        <button type="submit" id="AddButton" class="btn btn-primary">Confirm</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#flashMessage').delay(3000).fadeOut('slow');
+           
+        });
+
+        $(".toggle-NewPassword").click(function () {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+
+        $(".toggle-ConfirmPassword").click(function () {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+    </script>
+
+}
+
+
+

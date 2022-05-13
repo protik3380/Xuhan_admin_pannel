@@ -1,0 +1,350 @@
+﻿@using xtbdEcommerceAdminPanel.Enum
+@using xtbdEcommerceAdminPanel.Models
+@using xtbdEcommerceAdminPanel.Models.View_Model
+@using xtbdEcommerceAdminPanel.Utility
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Beauti4me</title>
+    <link rel="stylesheet" href="~/Content/css/bootstrap.css">
+    <link href="~/Content/css/sweetalert2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/vendors/chartjs/Chart.min.css">
+    <link href="~/Content/css/toastr.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="~/Content/css/app.css">
+    <link rel="shortcut icon" href="~/Content/images/beauti4me-icon.png" type="image/x-icon">
+    @RenderSection("style", required: false)
+</head>
+<body>
+    @if (Session["email"] != null)
+    {
+
+        CountOrder countOrder = ApiUtility.CountAllOrder();
+        LoginVM loginVm = (LoginVM)Session["LoginVM"];
+
+        <div id="app">
+            <div id="sidebar" class='active'>
+                <div class="sidebar-wrapper active">
+                    <div class="sidebar-header">
+                        <img src="~/Content/images/logo.png" alt="" srcset="">
+                    </div>
+                    <div class="sidebar-menu">
+                        <ul class="menu">
+
+                            <li class='sidebar-title'>Main Menu</li>
+
+                            <li class="sidebar-item has-sub" id="Dashboard">
+                                <a class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                                <ul class="submenu">
+                                    <li>
+                                        <a href="@Url.Action("Product","DashBoard")">Product Dashboard</a>
+
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Order", "DashBoard")">Order Dashboard</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @if (loginVm.UserTypeId == (int)EnumClass.UserTypeEnum.Admin || loginVm.UserTypeId == (int)EnumClass.UserTypeEnum.SuperAdmin)
+                            {
+                                <li class="sidebar-item has-sub " id="Setup">
+                                    <a class='sidebar-link'>
+                                        <i data-feather="triangle" width="20"></i>
+                                        <span>Setup</span>
+                                    </a>
+
+                                    <ul class="submenu " style="height: auto">
+                                        <li>
+                                            <a href="@Url.Action("ChangeCrediential","Home")">Admin Credential Change</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Banner")">Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Brand")">Brand</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Category")">Category</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Product")">Product</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "ProductUnit")">Product Unit</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "UseProcessImage")">Use Process Image</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "ProductDiscount")">Product Discount</a>
+                                        </li>
+                                        @*<li>
+                                                <a href="@Url.Action("Index", "Coupon")">Coupon</a>
+                                            </li>*@
+                                        @*<li>
+                                                <a href="@Url.Action("Index", "ProductStorage")">Product Storage</a>
+                                            </li>*@
+                                        <li>
+                                            <a href="@Url.Action("Index", "SkinConcernTag")">Skin Concern Tag</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "SkinSolutionTag")">Skin Solution Tag</a>
+                                        </li>
+                                        @*<li>
+                                                <a href="@Url.Action("Index", "Department")">Department</a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index", "Designation")">Designation</a>
+                                            </li>*@
+                                        <li>
+                                            <a href="@Url.Action("Index", "District")">District</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Thana")">Thana</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "MasterDepot")">Masterdepot</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Distributor")">Distributor</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Deliveryman")">Deliveryman</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Customer")">Customer</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("AssignDeliveryMan", "AssignOrder")">Assign Order</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ViewAssignOrder", "AssignOrder")">View Assigned Orders</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (loginVm.UserTypeId == (int)EnumClass.UserTypeEnum.MasterDepot)
+                            {
+                                <li class="sidebar-item has-sub " id="Setup">
+                                    <a class='sidebar-link'>
+                                        <i data-feather="triangle" width="20"></i>
+                                        <span>Setup</span>
+                                    </a>
+
+                                    <ul class="submenu " style="height: auto">
+                                        <li>
+                                            <a href="@Url.Action("ChangeCredientialMasterDepot","Home")">Credential Change</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
+                            <li class='sidebar-title'>Order Setup</li>
+                            <li class="sidebar-item" id="PendingOrders">
+                                <a href="@Url.Action("PendingOrders","Order")" class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Pending Orders</span>
+                                    <span class="badge bg-blue text-white" style="font-family: sans-serif;">@countOrder.Pending</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item" id="ProcessingOrders">
+                                <a href="@Url.Action("ProcessingOrders","Order")" class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Processing Orders</span>
+                                    <span class="badge bg-blue text-white" style="font-family: sans-serif;">@countOrder.Processing</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item" id="PackagingOrders">
+                                <a href="@Url.Action("PackagingOrders","Order")" class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Packaging Orders</span>
+                                    <span class="badge bg-blue text-white" style="font-family: sans-serif;">@countOrder.Packaging</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item" id="ShippiedOrders">
+                                <a href="@Url.Action("ShippiedOrders","Order")" class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Shipped Orders</span>
+                                    <span class="badge bg-blue text-white" style="font-family: sans-serif;">@countOrder.Shipped</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item" id="DeliveredOrders">
+                                <a href="@Url.Action("DeliveredOrders","Order")" class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Delivering Orders</span>
+                                    <span class="badge bg-blue text-white" style="font-family: sans-serif;">@countOrder.Delivered</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item" id="ReceivedOrders">
+                                <a href="@Url.Action("ReceivedOrders","Order")" class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Received Orders</span>
+                                    <span class="badge bg-green text-white" style="font-family: sans-serif;">@countOrder.Received</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item" id="CancelOrder">
+                                <a href="@Url.Action("CanceledOrders","Order")" class='sidebar-link'>
+                                    <i data-feather="home" width="20"></i>
+                                    <span>Canceled Orders</span>
+                                    <span class="badge bg-danger text-white" style="font-family: sans-serif;">@countOrder.Cancelled</span>
+                                </a>
+                            </li>
+                            <li class='sidebar-title'>Data Report</li>
+                            <li class="sidebar-item has-sub " id="Setup">
+                                <a href="#" class='sidebar-link'>
+                                    <i data-feather="triangle" width="20"></i>
+                                    <span>Report</span>
+                                </a>
+
+                                <ul class="submenu " style="height: auto">
+                                    @*<li>
+                                            <a href="@Url.Action("Analysis","Report")">Analysis Report</a>
+                                        </li>*@
+                                    <li>
+                                        <a href="@Url.Action("OrdersByLocationReport", "Report")">Order by location</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("SalesByProduct", "Report")">Sales By Product</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("TotalOrders", "Report")">Total Orders Report</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("OrdersByStatus", "Report")">Order by Status Report</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("OrderRateOverTime", "Report")">Order Growth Report</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+                </div>
+            </div>
+            <div id="main">
+                <nav class="navbar navbar-header navbar-expand navbar-light">
+                    <a class="sidebar-toggler"><span class="navbar-toggler-icon"></span></a>
+                    <button class="btn navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav d-flex align-items-center navbar-light ml-auto">
+                            @*<li class="dropdown nav-icon">
+                                    <a href="#" data-toggle="dropdown" class="nav-link  dropdown-toggle nav-link-lg nav-link-user">
+                                        <div class="d-lg-inline-block">
+                                            <i data-feather="bell"></i>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-large">
+                                        <h6 class='py-2 px-4'>Notifications</h6>
+                                        <ul class="list-group rounded-none">
+                                            <li class="list-group-item border-0 align-items-start">
+                                                <div class="avatar bg-success mr-3">
+                                                    <span class="avatar-content"><i data-feather="shopping-cart"></i></span>
+                                                </div>
+                                                <div>
+                                                    <h6 class='text-bold'>New Order</h6>
+                                                    <p class='text-xs'>
+                                                        An order made by Ahmad Saugi for product Samsung Galaxy S69
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>*@
+                            @*<li class="dropdown nav-icon mr-2">
+                                    <a href="#" data-toggle="dropdown" class="nav-link  dropdown-toggle nav-link-lg nav-link-user">
+                                        <div class="d-lg-inline-block">
+                                            <i data-feather="mail"></i>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
+                                        <a class="dropdown-item active" href="#"><i data-feather="mail"></i> Messages</a>
+                                        <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
+                                    </div>
+                                </li>*@
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                                    <div class="avatar mr-1">
+                                        @*<img src="assets/images/avatar/avatar-s-1.png" alt="" srcset="">*@
+                                    </div>
+                                    @if (Session["email"] != null)
+                                    {
+                                        <div class="d-none d-md-block d-lg-inline-block">@Session["email"].ToString()</div>
+
+                                    }
+                                    else
+                                    {
+                                        <div class="d-none d-md-block d-lg-inline-block">Guest</div>
+                                    }
+
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    @*<a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
+                                        <a class="dropdown-item active" href="#"><i data-feather="mail"></i> Messages</a>
+                                        <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
+                                        <div class="dropdown-divider"></div>*@
+                                    <a class="dropdown-item" href="@Url.Action("Logout","Home")"><i data-feather="log-out"></i> Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                @RenderBody()
+
+                <footer>
+                    <div class="footer clearfix mb-0 text-muted">
+                        <div class="float-left">
+                            <p>@DateTime.Now.Year &copy; Beauti4me</p>
+                        </div>
+                        @*<div class="float-right">
+                                <p>Crafted with <span class='text-danger'><i data-feather="heart"></i></span> by <a href="http://ahmadsaugi.com">Ahmad Saugi</a></p>
+                            </div>*@
+                    </div>
+                </footer>
+            </div>
+        </div>
+    }
+    else
+    {
+
+        @RenderBody()
+
+    }
+
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Content/js/feather-icons/feather.min.js"></script>
+    <script src="~/Content/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="~/Content/js/app.js"></script>
+    <script src="~/Scripts/sweetalert2.min.js"></script>
+    <script src="~/Content/vendors/chartjs/Chart.min.js"></script>
+    <script src="~/Content/vendors/apexcharts/apexcharts.min.js"></script>
+    <script src="~/Content/js/pages/dashboard.js"></script>
+    <script src="~/Content/js/main.js"></script>
+    <script src="~/Content/js/toastr.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#PendingOrders').removeClass('active');
+            $('#PackagingOrders').removeClass('active');
+            $('#ShippiedOrders').removeClass('active');
+            $('#@Session["activeClass"]').addClass('active');
+
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

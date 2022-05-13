@@ -1,0 +1,217 @@
+﻿@using Vereyon.Web
+@using xtbdEcommerceAdminPanel.Utility
+@model xtbdEcommerceAdminPanel.Models.RequestDto.ProductStorageDto
+@{
+    ViewBag.Title = "Product Storage";
+}
+<head>
+    <style>
+        label.error {
+            color: red;
+        }
+    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<div class="main-content container-fluid">
+    <div class="page-title mb-2">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Product Storage Setup</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Product Storage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Product Storage</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <section id="basic-horizontal-layouts">
+        <div class="row match-height">
+            <div class="col-md-1 col-12"></div>
+            <div class="col-md-10 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add Product Storage</h4>
+                        <a class="btn btn-primary mr-1 mb-1" style="float: right" href="@Url.Action("Index","ProductStorage")">Back to List</a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "ProductStorage", FormMethod.Post, new { id = "productForm", @class = "form form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.RenderFlashMessages()
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Category</label>
+                                            @Html.DropDownList("categoryId", new SelectList(ViewBag.Categories, "Id", "Name"), "---- Select Category ----", new { @class = "form-control" })<i></i>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Products</label>
+                                            @Html.DropDownList("Product", Enumerable.Empty<SelectListItem>(), "---- Select Product ----", new { @class = "form-control" })<i></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Product Unit</label>
+                                            @Html.DropDownListFor(model => model.ProductUnitId, Enumerable.Empty<SelectListItem>(), "---- Select Product Unit ----", new { @class = "form-control" })<i></i>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="label">Total Stock</label>
+                                            @Html.TextBoxFor(model => model.TotalStock, new { placeholder = "Total stock", @class = "form-control" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" id="AddButton" class="btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+            $(document).on('change keyup',
+                '.required',
+                function(e) {
+                    var disabled = true;
+                    $(".required").each(function() {
+                        var value = this.value;
+                        if ((value) && (value.trim() != '')) {
+                            disabled = false;
+                        } else {
+                            disabled = true;
+                            return false;
+                        }
+                    });
+
+                    if (disabled) {
+                        $('.toggle-disabled').prop("disabled", true);
+                    } else {
+                        $('.toggle-disabled').prop("disabled", false);
+                    }
+                });
+
+            $("#productForm").validate({
+                rules: {
+                    categoryId: "required",
+                    ProductUnitId: "required",
+                    Product: "required",
+                    TotalStock: {
+                        required: true,
+                        number: true
+                    }
+                },
+                messages: {
+                    categoryId: "Please select a category",
+                    ProductUnitId: "Please enter product unit",
+                    TotalStock: {
+                        required: "Please enter stock amount"
+                    },
+                    Product: {
+                        required: "Please select product"
+                    }
+                }
+            });
+            $(document).ready(function() {
+
+                $("#Product").change(function() {
+
+                    var productId = $("#Product").val();
+                    var product = { id: productId };
+                    $("#ProductUnitId").empty();
+                    $("#ProductUnitId").append('<option value="" selected>Select Product Unit</option>');
+
+                    $.ajax({
+                        url: '@Url.Action("GetProductUnitsByProduct", "DropDown")',
+                        type: "GET",
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        data: product,
+                        success: function(data) {
+                            $.each(data,
+                                function(index, value) {
+                                    $("#ProductUnitId").append('<option value="' +
+                                        value.Id +
+                                        '">' +
+                                        value.StockKeepingUnit +
+                                        '</option>');
+                                });
+                        },
+                        error: function() {
+                            alert("Something went wrong");
+                        }
+
+                    });
+                });
+
+
+                function LoadProducts() {
+                    var categoryId = $("#categoryId").val();
+                    $("#Product").empty();
+                    $("#Product").append('<option value="" selected>---- Select Product ----</option>');
+                    if (categoryId !== "") {
+                        var product = { categoryId: categoryId };
+
+                        $.ajax({
+                            url: '@Url.Action("GetProductsByCategory", "DropDown")',
+                            type: "GET",
+                            dataType: 'JSON',
+                            contentType: "application/json; charset=utf-8",
+                            data: product,
+                            success: function (data) {
+                                $.each(data,
+                                 function(index, value) {
+                                     $("#Product").append('<option value="' +
+                                         value.Id +
+                                         '">' +
+                                         value.Name +
+                                         '</option>');
+                                 });
+                            },
+                            error: function () {
+                                alert("Something went wrong");
+                            }
+
+                        });
+                    }
+                }
+
+                $("#categoryId").change(function () {
+                    LoadProducts();
+                });
+
+                $(function() {
+                    setTimeout(function() {
+                            $("#flashMessage").hide('blind', {}, 500);
+                        },
+                        5000);
+                });
+            });
+    </script>
+
+}
+
+
+

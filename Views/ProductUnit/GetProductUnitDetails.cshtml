@@ -1,0 +1,16 @@
+﻿@using xtbdEcommerceAdminPanel.Models.RequestDto
+@using xtbdEcommerceAdminPanel.Utility
+@model xtbdEcommerceAdminPanel.Models.RequestDto.ProductUnitDto
+
+<div id="gallery_hotel">    
+    <img id="largeImage" src="@BaseUrl.imageUrl\@Model.ProductImages[0].ImageUrl"/>
+</div>
+<div id="thumbs_hotel">
+    @if (Model.ProductImages.Any())
+    {
+        foreach (ProductImageDto image in Model.ProductImages)
+        {
+            <img style="width: 120px; height: 80px" src="@BaseUrl.imageUrl\@image.ImageUrl" />
+        }
+    }   
+</div>

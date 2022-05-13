@@ -1,0 +1,140 @@
+﻿@using xtbdEcommerceAdminPanel.Enum
+@using xtbdEcommerceAdminPanel.Models
+@model xtbdEcommerceAdminPanel.Models.Order
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLongTitle">Order Details</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <table class='table table-striped' id="table1">
+        <thead>
+            <tr>
+                <th>SL.</th>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>QTY</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.OrderDetails != null)
+            {
+                var count = 1;
+                foreach (OrderDetail orderDetail in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>@(count++)</td>
+                        <td>@orderDetail.ProductUnit.Product.Name</td>
+                        <td>@orderDetail.UnitPrice</td>
+                        <td>
+                            @orderDetail.Quantity
+                        </td>
+                        @{
+                            decimal totalPrice = @orderDetail.Quantity * @orderDetail.UnitPrice;
+                        }
+                        <td class="text-right">@totalPrice BDT</td>
+                    </tr>
+                                }
+                            }
+
+        </tbody>
+    </table>
+    <table class="table" id="table2">
+
+        <tbody class="text-right">
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    Subtotal
+                </td>
+                <td>@Model.TotalAmountAfterDiscount BDT</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    Delivery charge
+                </td>
+                <td>@Model.DeliveryCharge BDT</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    Discount
+                </td>
+                <td>@Model.TotalDiscountAmount BDT</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    Grand Total
+                </td>
+                <td>@Model.TotalAmount BDT</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    @if (@Model.OrderStateId != (long)EnumClass.OrderStateEnum.Cancelled
+                     && @Model.OrderStateId != (long)EnumClass.OrderStateEnum.Received)
+    {
+        <fieldset class="form-group m-1">
+            <select class="form-select" id="ddlCancelOrder">
+                @foreach (OrderRejectStatus rejectStatus in ViewBag.RejectStatus)
+                {
+                    <option value="@rejectStatus.Id">@rejectStatus.RejectStatus</option>
+                }
+            </select>
+        </fieldset>
+        <button type="button" class="btn btn-danger" onclick="cancelOrder(@Model.Id,@Model.UserId,@Model.OrderStateId)" value="Delete">Cancel Order</button>
+        <button type="button" class="btn btn-primary" onclick="confirmPendingOrder(@Model.Id,@Model.UserId,@Model.OrderStateId)">Confirm</button>
+    }
+
+    <Script>
+        function cancelOrder(orderId,userId,orderStateId) {
+            var e = document.getElementById("ddlCancelOrder");
+            var rejectId = e.value;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to cancel this order ?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#739e73',
+                cancelButtonColor: '#A90329',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    location.href = "/Order/CancelOrder?orderId=" + orderId + "&userId=" +userId+"&rejectId="+rejectId+"&orderStateId="+orderStateId;
+                }
+            });
+        }
+
+
+
+        function confirmPendingOrder(orderId,userId,currentOrderStateId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to change this order status ?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#739e73',
+                cancelButtonColor: '#A90329',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    location.href = "/Order/ChangeOrderState?orderId=" + orderId + "&userId=" +userId+"&orderStateId="+currentOrderStateId;
+                }
+            });
+        }
+    </Script>
+</div>
